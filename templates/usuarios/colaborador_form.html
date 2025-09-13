@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}{% if object %}Editar Colaborador{% else %}Novo Colaborador{% endif %}{% endblock %}
+
+{% block content %}
+  <div class="grid">
+    <div class="card">
+      <div class="card-inner">
+        <h2 style="margin:0 0 12px">{% if object %}Editar{% else %}Novo{% endif %} Colaborador</h2>
+        <form method="post" class="form" novalidate>
+          {% csrf_token %}
+          <div class="row">
+            <div>
+              <label>Nome</label>
+              {{ form.nome }}
+              {% for e in form.nome.errors %}<div class="hint" style="color:#ff9f9f">{{ e }}</div>{% endfor %}
+            </div>
+            <div>
+              <label>CPF (11 dígitos)</label>
+              {{ form.cpf }}
+              {% for e in form.cpf.errors %}<div class="hint" style="color:#ff9f9f">{{ e }}</div>{% endfor %}
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>Matrícula</label>
+              {{ form.matricula }}
+              {% for e in form.matricula.errors %}<div class="hint" style="color:#ff9f9f">{{ e }}</div>{% endfor %}
+            </div>
+            <div>
+              <label>Ativo</label>
+              {{ form.ativo }}
+              {% for e in form.ativo.errors %}<div class="hint" style="color:#ff9f9f">{{ e }}</div>{% endfor %}
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>Perfil</label>
+              {{ form.perfil }}
+              {% for e in form.perfil.errors %}<div class="hint" style="color:#ff9f9f">{{ e }}</div>{% endfor %}
+            </div>
+          </div>
+          <div class="row login-fields" style="display: none;">
+            <div>
+              <label>Nome de usuário</label>
+              {{ form.username }}
+              {% for e in form.username.errors %}<div class="hint" style="color:#ff9f9f">{{ e }}</div>{% endfor %}
+            </div>
+            <div>
+              <label>Senha</label>
+              {{ form.password }}
+              {% for e in form.password.errors %}<div class="hint" style="color:#ff9f9f">{{ e }}</div>{% endfor %}
+            </div>
+          </div>
+          <div class="actions">
+            <a href="{% url 'usuarios:list' %}" class="btn">Cancelar</a>
+            <button class="btn primary" type="submit">Salvar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    /*JS que mostra ou esconde a div .login-fields (usuário e senha)
+    conforme o valor selecionado em <select name="perfil">.
+    Exibe quando o perfil é TECNICO_SST, ALMOXARIFE ou ADMIN;
+    esconde para os demais, atualizando tanto na carga da página
+    quanto quando o select muda.*/
+    const perfilSelect = document.querySelector('select[name="perfil"]');  // Campo de perfil
+    const loginFields = document.querySelector('.login-fields');  // Div com username/senha
+
+    function toggleLoginFields() {
+      const perfil = perfilSelect.value;
+      if (perfil === 'TECNICO_SST' || perfil === 'ALMOXARIFE' || perfil === 'ADMIN') {
+        loginFields.style.display = 'grid';  // Mostra para perfis com login
+      } else {
+        loginFields.style.display = 'none';  // Esconde para COLABORADOR
+      }
+    }
+
+    // Chama na carga inicial
+    toggleLoginFields();
+
+    // Chama quando muda o perfil
+    perfilSelect.addEventListener('change', toggleLoginFields);
+  </script>
+{% endblock %}

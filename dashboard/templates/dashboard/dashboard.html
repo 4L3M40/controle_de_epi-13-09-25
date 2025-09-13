@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — EPI Manager{% endblock %}
+{% block content %}
+{% load static %}
+
+<div class="grid" style="gap:24px;">
+  <div class="card">
+    <div class="card-inner">
+      <h2>Bem-vindo(a), {{ request.user.username }}
+        {% if request.user.colaborador %}
+          ({{ request.user.colaborador.get_perfil_display }})
+        {% endif %}
+      </h2>
+      <p>Escolha uma opção no menu abaixo:</p>
+
+      <div class="dashboard-buttons">
+
+        <!-- Colaboradores: todos enxergam -->
+        <a class="btn primary" href="{% url 'usuarios:list' %}">
+          Colaboradores
+          {% if request.user.colaborador and request.user.colaborador.perfil == 'TECNICO_SST' %}
+            <span style="font-size:0.8rem;display:block;">(Somente visualização)</span>
+          {% endif %}
+        </a>
+
+        <!-- EPIs (Admin, Técnico SST, Almoxarife) -->
+        {% if request.user.is_superuser or request.user.colaborador.perfil in 'ADMIN,TECNICO_SST,ALMOXARIFE' %}
+          <a class="btn" href="{% url 'epis:list' %}">EPIs</a>
+        {% endif %}
+
+        <!-- Empréstimos (Admin, Almoxarife, Técnico SST) -->
+        {% if request.user.is_superuser or request.user.colaborador.perfil in 'ADMIN,ALMOXARIFE,TECNICO_SST' %}
+          <a class="btn" href="{% url 'emprestimos:list' %}">
+            Empréstimos
+            {% if request.user.colaborador and request.user.colaborador.perfil == 'TECNICO_SST' %}
+              <span style="font-size:0.8rem;display:block;">(Somente visualização)</span>
+            {% endif %}
+          </a>
+        {% endif %}
+
+        <!-- Pendências/Histórico -->
+        {% if request.user.is_superuser or request.user.colaborador.perfil in 'ADMIN,TECNICO_SST,ALMOXARIFE' %}
+          <a class="btn" href="{% url 'emprestimos:list' %}">Pendências/Histórico</a>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

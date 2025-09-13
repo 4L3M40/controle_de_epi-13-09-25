@@ -1,0 +1,112 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}EPI — Gestão de Colaboradores{% endblock %}</title>
+    <link rel="icon" href="{% static 'img/logo.png' %}">
+
+    <!-- CSS principais -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}?v=5">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}?v=5">
+    <link rel="stylesheet" href="{% static 'css/forms.css' %}?v=5">
+    <link rel="stylesheet" href="{% static 'css/tables.css' %}?v=5">
+    <link rel="stylesheet" href="{% static 'css/overrides.css' %}?v=5">
+  </head>
+  <body class="{% block body_class %}{% endblock %}">
+
+    <!-- ===== NAVBAR SUPERIOR ===== -->
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <a class="logo" href="{% url 'dashboard' %}">
+          <img src="{% static 'img/logo.png' %}" alt="Logo">
+          <span>EPI Manager</span>
+        </a>
+
+        <div class="search">
+          <form action="{% url 'usuarios:list' %}" method="get">
+            <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Buscar colaboradores (CTRL+K)">
+          </form>
+        </div>
+
+        {% if user.is_authenticated %}
+        <div class="user-actions">
+          <span class="nav-username">{{ user.username }}</span>
+          <a href="{% url 'usuarios:logout' %}" class="btn">Sair</a>
+        </div>
+        {% endif %}
+      </div>
+    </nav>
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" aria-label="Sidebar">
+      <div class="sidebar-user" id="sidebar-user">
+        <img src="{% static 'img/avatar.jpeg' %}" alt="Usuário" class="sidebar-avatar">
+        <div class="user-info">
+          <div class="user-name">{{ user.username }}</div>
+          {% if user.colaborador %}
+            <div class="user-role">{{ user.colaborador.get_perfil_display }}</div>
+            <div class="user-colaborador">{{ user.colaborador.ngc }}</div> <!-- substitua 'ngc' pelo campo correto -->
+          {% endif %}
+        </div>
+      </div>
+
+      <div id="user-menu" class="user-menu" style="display:none;">
+        <a href="{% url 'usuarios:perfil_editar' %}" class="menu-item">Editar Perfil</a>
+        <a href="#" class="menu-item">Configurações</a>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Navegação lateral">
+        <a href="{% url 'epis:list' %}">EPIs</a>
+        <a href="{% url 'emprestimos:list' %}">Empréstimos</a>
+        <a href="{% url 'emprestimos:list' %}">Pendências/Histórico</a>
+      </nav>
+    </aside>
+
+    <!-- ===== CONTEÚDO ===== -->
+    <div class="container">
+      <section class="hero card">
+        <img src="{% static 'img/hero.jpg' %}" alt="Segurança e EPIs" class="hero-img">
+        <div class="overlay"></div>
+        <div class="content">
+          <h1>Gestão de Colaboradores</h1>
+          <p>Organize cadastro, mantenha dados atualizados e acelere o processo de empréstimo de EPIs.</p>
+        </div>
+      </section>
+
+      {% if messages %}
+      <div class="grid">
+        {% for m in messages %}
+          <div class="alert">{{ m }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% block content %}{% endblock %}
+    </div>
+
+    <footer class="footer">
+      <div class="container">
+        <span>© 2025 EPI Manager — Segurança do Trabalho</span>
+      </div>
+    </footer>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script>
+      // toggle menu lateral
+      document.getElementById('sidebar-user')?.addEventListener('click', ()=>{
+        const m = document.getElementById('user-menu');
+        if(m){ m.style.display = (m.style.display==='none'||!m.style.display)?'block':'none'; }
+      });
+
+      // atalho CTRL+K ou CMD+K
+      document.addEventListener('keydown', (e)=>{
+        if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='k'){
+          const input = document.querySelector('.search input');
+          if(input){ e.preventDefault(); input.focus(); input.select(); }
+        }
+      });
+    </script>
+  </body>
+</html>

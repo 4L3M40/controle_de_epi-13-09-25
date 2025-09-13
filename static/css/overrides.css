@@ -1,0 +1,124 @@
+/* ===== OVERRIDES CSS ===== */
+
+/* Sidebar: fixada à esquerda, abaixo da navbar */
+.sidebar {
+    position: fixed;
+    top: 82px;      /* altura da navbar */
+    left: 0;
+    width: 220px;
+    height: calc(100% - 82px); /* altura da tela menos navbar */
+    background-color: #111421;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    z-index: 20;
+}
+
+/* Aparência do bloco de usuário (sidebar) */
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.03);
+}
+.sidebar-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.sidebar .user-colaborador {
+    color: var(--text);
+    font-size: 0.85rem;
+    margin-top: 4px;
+    opacity: 0.8;
+}
+.sidebar .user-name { font-weight: 600; color: var(--text); }
+.sidebar .user-role { color: var(--muted); font-size: 0.85rem; }
+
+/* Menu do usuário */
+.user-menu {
+  position: absolute;
+  left: 16px;          /* fica alinhado com sidebar */
+  top: calc(72px + 56px);
+  background: #0b0f20;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  padding: 8px;
+  display: none;
+  z-index: 60;
+}
+.user-menu .menu-item { display: block; padding: 6px 8px; text-decoration: none; color: var(--muted); }
+
+/* Nav lateral (links) */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.sidebar-nav a {
+  text-decoration: none;
+  padding: 8px;
+  border-radius: 8px;
+  color: var(--muted);
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+/* Espaço para a sidebar: empurra o conteúdo principal à direita */
+.container {
+  padding-left: 260px !important;  /* 220px de sidebar + 40px de margem */
+}
+
+/* Hero: altura menor (reduz a imagem "do meio") */
+.hero img {
+  width: 100% !important;
+  height: 160px !important;    /* diminui a altura */
+  object-fit: cover !important;
+  max-width: none !important;
+}
+
+/* ===== AJUSTES LOGIN ===== */
+body.login-page .navbar,
+body.login-page .sidebar,
+body.login-page .footer,
+body.login-page .hero {
+    display: none !important;
+}
+
+body.login-page .container {
+  padding-left: 24px !important;
+  padding-top: 24px !important;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Ajustes para telas pequenas */
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .container { padding-left: 24px !important; }
+  .search input { min-width: unset; width: 140px; }
+}
+
+/* Força regras de navbar */
+nav.navbar { left: 0; right: 0; width: 100%; position: sticky; top: 0; z-index: 1000; }
+.navbar-inner { max-width: none !important; width: 100% !important; margin: 0 !important; padding: 14px 24px !important; }
+
+/* Dashboard — centralização dos botões */
+.dashboard-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  justify-items: center; /* centraliza horizontalmente */
+  margin-top: 16px;
+}
+.dashboard-buttons a.btn {
+  width: 200px; /* ou um tamanho mínimo para todos */
+}
+.dashboard-hero img {
+  height: 200px !important; /* ajuste conforme quiser */
+}

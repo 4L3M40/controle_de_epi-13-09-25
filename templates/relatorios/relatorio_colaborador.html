@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <div class="card-inner">
+    <h2>Relatório por Colaborador</h2>
+    <form method="get" class="form" style="margin: 12px 0">
+      <input type="text" name="q" placeholder="Pesquisar por nome do colaborador" value="{{ q|default:'' }}" />
+      <button class="btn primary" type="submit">Buscar</button>
+    </form>
+    <div class="table">
+      <table>
+        <thead>
+          <tr>
+            <th>Colaborador</th>
+            <th>EPI</th>
+            <th>Data Empréstimo</th>
+            <th>Previsão Devolução</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in itens %}
+          <tr>
+            <td>{{ item.emprestimo.colaborador.nome }}</td>
+            <td>{{ item.epi.nome }}</td>
+            <td>{{ item.emprestimo.data_emprestimo|date:"d/m/Y H:i" }}</td>
+            <td>{{ item.emprestimo.previsao_devolucao|date:"d/m/Y H:i" }}</td>
+            <td>{{ item.get_status_display }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="5">Nenhum registro encontrado.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

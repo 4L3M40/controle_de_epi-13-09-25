@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}EPIs — EPI{% endblock %}
+{% block content %}
+  <div class="grid">
+    <div class="card">
+      <div class="card-inner" style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h2 style="margin:0 0 6px">EPIs</h2>
+          <div class="pill"><span>Total:</span> <strong>{{ object_list.count }}</strong></div>
+        </div>
+        {% if request.user.is_superuser or request.user.colaborador.perfil == 'ADMIN' %}
+          <a class="btn primary" href="{% url 'epis:create' %}">+ Novo EPI</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-inner">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Nome</th>
+              <th>Status</th>
+              <th>Estoque</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for epi in object_list %}
+            <tr>
+              <td>{{ epi.codigo }}</td>
+              <td>{{ epi.nome }}</td>
+              <td>{{ epi.get_status_display }}</td>
+              <td>{{ epi.estoque }}</td>
+              <td class="actions">
+                {% if request.user.is_superuser or request.user.colaborador.perfil == 'ADMIN' %}
+                  <a class="btn" href="{% url 'epis:update' epi.pk %}">Editar</a>
+                  <a class="btn danger" href="{% url 'epis:delete' epi.pk %}">Excluir</a>
+                {% else %}
+                  <span class="badge tag-muted">Sem permissão</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="5">Nenhum EPI encontrado.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}

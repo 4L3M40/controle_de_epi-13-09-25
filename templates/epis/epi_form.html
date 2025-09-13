@@ -1,0 +1,74 @@
+<!-- templates/epis/epi_form.html (form para criar/editar EPI, com JS para esconder/mostrar campos baseados em status) -->
+{% extends "base.html" %}
+{% block title %}{% if object %}Editar EPI{% else %}Novo EPI{% endif %} — EPI Manager{% endblock %}
+{% block content %}
+<div class="grid">
+  <div class="card">
+    <div class="card-inner">
+      <h2 style="margin:0 0 12px">{% if object %}Editar{% else %}Novo{% endif %} EPI</h2>
+      <form method="post" class="form" novalidate>
+        {% csrf_token %}
+        <div class="row">
+          <div>
+            <label>Código</label>
+            {{ form.codigo }}
+            {% for e in form.codigo.errors %}<div class="hint" style="color:#ff9f9f">{{ e }}</div>{% endfor %}
+          </div>
+          <div>
+            <label>Nome</label>
+            {{ form.nome }}
+            {% for e in form.nome.errors %}<div class="hint" style="color:#ff9f9f">{{ e }}</div>{% endfor %}
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>Categoria</label>
+            {{ form.categoria }}
+            {% for e in form.categoria.errors %}<div class="hint" style="color:#ff9f9f">{{ e }}</div>{% endfor %}
+          </div>
+          <div>
+            <label>CA Número</label>
+            {{ form.ca_numero }}
+            {% for e in form.ca_numero.errors %}<div class="hint" style="color:#ff9f9f">{{ e }}</div>{% endfor %}
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>CA Validade</label>
+            {{ form.ca_validade }}
+            {% for e in form.ca_validade.errors %}<div class="hint" style="color:#ff9f9f">{{ e }}</div>{% endfor %}
+          </div>
+          <div>
+            <label>Tamanho</label>
+            {{ form.tamanho }}
+            {% for e in form.tamanho.errors %}<div class="hint" style="color:#ff9f9f">{{ e }}</div>{% endfor %}
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>Estoque</label>
+            {{ form.estoque }}
+            {% for e in form.estoque.errors %}<div class="hint" style="color:#ff9f9f">{{ e }}</div>{% endfor %}
+          </div>
+          <div>
+            <label>Ativo</label>
+            {{ form.ativo }}
+            {% for e in form.ativo.errors %}<div class="hint" style="color:#ff9f9f">{{ e }}</div>{% endfor %}
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>Status</label>
+            {{ form.status }}
+            {% for e in form.status.errors %}<div class="hint" style="color:#ff9f9f">{{ e }}</div>{% endfor %}
+          </div>
+        </div>
+        <div class="actions">
+          <a href="{% url 'epis:list' %}" class="btn">Cancelar</a>
+          <button class="btn primary" type="submit">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

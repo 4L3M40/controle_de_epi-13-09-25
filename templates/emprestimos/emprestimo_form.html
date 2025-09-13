@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}{% if object %}Editar Empréstimo{% else %}Novo Empréstimo{% endif %}{% endblock %}
+{% block content %}
+<div class="grid">
+  <div class="card">
+    <div class="card-inner">
+      <h2 style="margin:0 0 12px">{% if object %}Editar{% else %}Novo{% endif %} Empréstimo</h2>
+      {% if readonly %}
+        <div class="alert">Somente visualização — você não possui permissão para editar.</div>
+      {% endif %}
+      <form method="post" class="form" novalidate>
+        {% csrf_token %}
+        <div class="row">
+          <div>
+            <label>Colaborador</label>
+            {{ form.colaborador }}
+            {% for e in form.colaborador.errors %}<div class="hint" style="color:#ff9f9f">{{ e }}</div>{% endfor %}
+          </div>
+          <div>
+            <label>Previsão de devolução</label>
+            {{ form.previsao_devolucao }}
+            <div class="hint">Deve ser posterior a agora.</div>
+            {% for e in form.previsao_devolucao.errors %}<div class="hint" style="color:#ff9f9f">{{ e }}</div>{% endfor %}
+          </div>
+        </div>
+
+        <h3 style="margin-top:16px">Itens</h3>
+        <div id="itens">
+          {{ item_formset.management_form }}
+          {% for f in item_formset.forms %}
+            <div class="row card soft" style="margin-bottom:8px;padding:12px;">
+              <div>
+                <label>EPI</label>
+                {{ f.epi }}
+                {% for e in f.epi.errors %}<div class="hint" style="color:#ff9f9f">{{ e }}</div>{% endfor %}
+              </div>
+              <div>
+                <label>Qtd.</label>
+                {{ f.quantidade }}
+                {% for e in f.quantidade.errors %}<div class="hint" style="color:#ff9f9f">{{ e }}</div>{% endfor %}
+              </div>
+              <div>
+                <label>Status</label>
+                {{ f.status }}
+              </div>
+              <div class="devolucao-fields">
+                <label>Data da devolução</label>
+                {{ f.devolvido_em }}
+                <label style="margin-top:8px">Observação na devolução</label>
+                {{ f.observacao }}
+              </div>
+              {% if f.instance.pk %}
+                {{ f.id }}
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+
+        <div class="actions">
+          <a class="btn" href="{% url 'emprestimos:list' %}">Cancelar</a>
+          {% if not readonly %}<button class="btn primary" type="submit">Salvar</button>{% endif %}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // Campos "Data da devolução" e "Observação" só aparecem quando status for DEVOLVIDO/DANIFICADO/PERDIDO
+  const itemRows = document.querySelectorAll('#itens .row.card');
+  itemRows.forEach(row => {
+    const status = row.querySelector('select[name$="-status"]');
+    const devBox = row.querySelector('.devolucao-fields');
+    function sync(){
+      if(!status) return;
+      const v = status.value;
+      const show = (v === 'DEVOLVIDO' || v === 'DANIFICADO' || v === 'PERDIDO');
+      devBox.style.display = show ? '' : 'none';
+    }
+    if(status){ status.addEventListener('change', sync); sync(); }
+  });
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Excluir EPI{% endblock %}
+{% block content %}
+  <div class="grid">
+    <div class="card">
+      <div class="card-inner">
+        <h2 style="margin:0 0 12px">Confirmar exclusão</h2>
+        <p>Tem certeza de que deseja excluir <strong>{{ object.nome }}</strong> ({{ object.codigo }})?</p>
+        <form method="post">
+          {% csrf_token %}
+          <a href="{% url 'epis:list' %}" class="btn">Cancelar</a>
+          <button class="btn danger" type="submit">Excluir</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

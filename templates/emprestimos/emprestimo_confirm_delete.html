@@ -1,0 +1,18 @@
+<!-- templates/emprestimos/emprestimo_confirm_delete.html (confirmação de exclusão de empréstimo) -->
+{% extends "base.html" %}
+{% block title %}Excluir Empréstimo{% endblock %}
+{% block content %}
+  <div class="grid">
+    <div class="card">
+      <div class="card-inner">
+        <h2 style="margin:0 0 12px">Confirmar exclusão</h2>
+        <p>Tem certeza de que deseja excluir o empréstimo <strong>{{ object.id }}</strong> para {{ object.colaborador.nome }}?</p>
+        <form method="post">
+          {% csrf_token %}
+          <a href="{% url 'emprestimos:list' %}" class="btn">Cancelar</a>
+          <button class="btn danger" type="submit">Excluir</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Colaboradores — EPI{% endblock %}
+{% block content %}
+  <div class="grid">
+    <div class="card">
+      <div class="card-inner" style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h2 style="margin:0 0 6px">Colaboradores</h2>
+          <div class="pill"><span>Total:</span> <strong>{{ page_obj.paginator.count }}</strong></div>
+        </div>
+        {% if request.user.is_superuser or request.user.colaborador.perfil == 'ADMIN' %}
+          <a class="btn primary" href="{% url 'usuarios:create' %}">+ Novo Colaborador</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-inner">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>CPF</th>
+              <th>Matrícula</th>
+              <th>Ativo</th>
+              <th style="width:180px">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for c in colaboradores %}
+            <tr>
+              <td>{{ c.nome }}</td>
+              <td><span class="kbd">{{ c.cpf }}</span></td>
+              <td>{{ c.matricula }}</td>
+              <td>
+                {% if c.ativo %}<span class="badge tag-success">Ativo</span>
+                {% else %}<span class="badge tag-muted">Inativo</span>{% endif %}
+              </td>
+              <td class="actions">
+                {% if request.user.is_superuser or request.user.colaborador.perfil == 'ADMIN' %}
+                  <a class="btn" href="{% url 'usuarios:update' c.pk %}">Editar</a>
+                  <a class="btn danger" href="{% url 'usuarios:delete' c.pk %}">Excluir</a>
+                {% else %}
+                  <span class="badge tag-muted">Sem permissão</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="5">Nenhum colaborador encontrado.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+
+        {% if is_paginated %}
+        <div style="display:flex; gap:10px; align-items:center; justify-content:flex-end;">
+          {% if page_obj.has_previous %}
+            <a class="btn" href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}">Anterior</a>
+          {% endif %}
+          <span class="badge">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+          {% if page_obj.has_next %}
+            <a class="btn" href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}">Próxima</a>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
